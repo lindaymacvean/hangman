@@ -116,7 +116,7 @@ $(function() {
 	function processLettre(lettre) {
 		var found = false;
 		for (var i = 0 ; i < remainingLettres.length ; i++) {
-			if (remainingLettres.charAt(i) == lettre) {
+			if (remainingLettres.charAt(i) === lettre) {
 				remainingLettres = remainingLettres.replaceAt(i, '_');
 				secret = secret.replaceAt(i, lettre);
 				found = true;
@@ -124,7 +124,7 @@ $(function() {
 		}
 		if (found) {
 			$('#secret').text(secret);
-			if (secret.indexOf('_') == -1) {
+			if (secret.indexOf('_') === -1) {
 				alert('You won!');
 				location.reload();
 			}
@@ -132,7 +132,7 @@ $(function() {
 			currentImage++;
 			var imageId = '#hangman_' + currentImage;
 			$(imageId).fadeTo(300, 1.0, function() {
-				if (currentImage == 7) {
+				if (currentImage === 7) {
 					$('#secret').text(word);
 					alert('You lost!');
 					location.reload();
@@ -152,7 +152,7 @@ $(function() {
 	function getWord(len) {
 		while (true) {
 			var theWord = words[Math.floor(Math.random() * words.length)];
-			if (theWord.length == len) {
+			if (theWord.length === len) {
 				return theWord;
 			}
 		}
