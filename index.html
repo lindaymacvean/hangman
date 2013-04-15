@@ -100,6 +100,7 @@
 </div>
 <script src="words.js"></script>
 <script>
+//note: this whole thing could be redefined as a module with a single object footprint.
 $(function() { //defined in a function to limit scope of variables
 	//4 variables defined at beginning block
 	var currentImage = 1;
@@ -136,9 +137,11 @@ $(function() { //defined in a function to limit scope of variables
 	}
 	
 	//modify the global String object with a method to be able to replace a character at an index position. Kind of like a splice method. Note: NEEDS COLLISION PROTECTION from other libraries!
-	String.prototype.replaceAt = function(index, character) {
-		return this.substr(0, index) + character + this.substr(index+character.length);
-	} 
+	if(!String.prototype.replaceAt) {
+		String.prototype.replaceAt = function(index, character) {
+			return this.substr(0, index) + character + this.substr(index+character.length);
+		} 
+	}
 	
 	//a long function which processes the user input and compares it to theWord
 	function processLettre(lettre) {
