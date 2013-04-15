@@ -1,0 +1,59 @@
+#content {
+	text-align: center;
+}
+.title {
+	font-family: 'Comic Sans MS', cursive, sans-serif;
+	font-size: 1.5em;
+	margin-bottom: 0px;
+}
+#secret {
+	font-family: monospace, serif;
+	font-size: 4em;
+	font-weight: bold;
+	letter-spacing: 10px;
+}
+.lettres {
+	margin-top: 20px;
+}
+.lettres span {
+	font-family: monospace, serif;
+	font-size: 2em;
+	font-weight: bold;
+	padding-right: 5px;
+	padding-left: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	cursor: pointer;
+	background-color: #CECECE;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	border-radius: 4px;
+}
+.lettres span:ACTIVE {
+	background-color: #59c1e8;
+}
+.lettres span.disabled {
+	background-color: #e7e7e7;
+	color: #b1b1b1;
+}
+.clear {
+	clear: both;
+	margin-bottom: 4px;
+}
+.image {
+	position: relative;
+	width: 254px;
+	height: 340px;
+	margin-left: 50%;
+}
+.hangman {
+	position: absolute;
+	top: 0px;
+	left: -127px;
+	opacity:0;
+	filter:alpha(opacity=0); /* For IE8 and earlier */
+}
+#hangman_1 {
+	opacity:1.0;
+	filter:alpha(opacity=100); /* For IE8 and earlier */
+}
