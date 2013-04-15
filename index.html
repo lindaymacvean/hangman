@@ -3,73 +3,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
 <title>CoderDojo Android Hangman</title>
-<!-- changed to local file for offline use -->
-<link rel="stylesheet" href="jquery.mobile.css" />
-<style>
-#content {
-	text-align: center;
-}
-.title {
-	font-family: 'Comic Sans MS', cursive, sans-serif;
-	font-size: 1.5em;
-	margin-bottom: 0px;
-}
-#secret {
-	font-family: monospace, serif;
-	font-size: 4em;
-	font-weight: bold;
-	letter-spacing: 10px;
-}
-.lettres {
-	margin-top: 20px;
-}
-.lettres span {
-	font-family: monospace, serif;
-	font-size: 2em;
-	font-weight: bold;
-	padding-right: 5px;
-	padding-left: 5px;
-	margin-left: 5px;
-	margin-right: 5px;
-	cursor: pointer;
-	background-color: #CECECE;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	border-radius: 4px;
-}
-.lettres span:ACTIVE {
-	background-color: #59c1e8;
-}
-.lettres span.disabled {
-	background-color: #e7e7e7;
-	color: #b1b1b1;
-}
-.clear {
-	clear: both;
-	margin-bottom: 4px;
-}
-.image {
-	position: relative;
-	width: 254px;
-	height: 340px;
-	margin-left: 50%;
-}
-.hangman {
-	position: absolute;
-	top: 0px;
-	left: -127px;
-	opacity:0;
-	filter:alpha(opacity=0); /* For IE8 and earlier */
-}
-#hangman_1 {
-	opacity:1.0;
-	filter:alpha(opacity=100); /* For IE8 and earlier */
-}
-</style>
-<!-- changed to local file for offline use -->
-<script src="jquery.1.7.2.js"></script>
-<!-- changed to local file for offline use -->
-<script src="jquery.mobile.min.js"></script>
+<!-- changed to local file for offline use --><link rel="stylesheet" href="jquery/jquery.mobile.css" />
+<link rel="stylesheet" href="css/style.css" />
+<!-- changed to local file for offline use --><script src="jquery/jquery.1.7.2.js"></script>
+<!-- changed to local file for offline use --><script src="jquery/jquery.mobile.min.js"></script>
+<script type="text/javascript" src="js/words.js"></script>
+<script type="text/javascript" src="js/combined.js"></script>
+
 
 </head>
 <body class="ui-mobile-viewport ui-overlay-c">
@@ -79,13 +19,13 @@
 	</div>
 	<div id="content" data-role="content">
 		<div class="image">
-			<img src="Hangman_1.png" alt="Hangman" class="hangman" id="hangman_1"/>
-			<img src="Hangman_2.png" alt="Hangman" class="hangman" id="hangman_2"/>
-			<img src="Hangman_3.png" alt="Hangman" class="hangman" id="hangman_3"/>
-			<img src="Hangman_4.png" alt="Hangman" class="hangman" id="hangman_4"/>
-			<img src="Hangman_5.png" alt="Hangman" class="hangman" id="hangman_5"/>
-			<img src="Hangman_6.png" alt="Hangman" class="hangman" id="hangman_6"/>
-			<img src="Hangman_7.png" alt="Hangman" class="hangman" id="hangman_7"/>
+			<img src="images/Hangman_1.png" alt="Hangman" class="hangman" id="hangman_1"/>
+			<img src="images/Hangman_2.png" alt="Hangman" class="hangman" id="hangman_2"/>
+			<img src="images/Hangman_3.png" alt="Hangman" class="hangman" id="hangman_3"/>
+			<img src="images/Hangman_4.png" alt="Hangman" class="hangman" id="hangman_4"/>
+			<img src="images/Hangman_5.png" alt="Hangman" class="hangman" id="hangman_5"/>
+			<img src="images/Hangman_6.png" alt="Hangman" class="hangman" id="hangman_6"/>
+			<img src="images/Hangman_7.png" alt="Hangman" class="hangman" id="hangman_7"/>
 		</div>
 		<div id="secret"></div>
 		<div class="lettres">
@@ -98,95 +38,5 @@
 		<h4>CoderDojo Cork Avego</h4>
 	</div>
 </div>
-<script src="words.js"></script>
-<script>
-//note: this whole thing could be redefined as a module with a single object footprint.
-$(function() { //defined in a function to limit scope of variables
-	//4 variables defined at beginning block
-	var currentImage = 1;
-	var word;
-	var remainingLettres;
-	var secret;
-	
-	//setup function which can be fed theWord
-	function setup(theWord) {
-		word = theWord.toUpperCase(); //internal variable to capture theWord note:why is this double variable needed?
-		remainingLettres = word; //remainingLettres set to theWord string
-		secret = word.replace(/./g, '_'); //secret is set to blanks
-		$('#secret').text(secret); //set the contents of #secret node to secret string.
-	}
-	
-	//First define the word variable which the user will be guessing
-	
-	//var words=['CAT','CAR','BAG']; //for testing with a small list
-	
-	//a function that gets the word from words array defined in words.js
-	function getWord(len) {
-		while (true) {
-			var theWord = words[Math.floor(Math.random() * words.length)];
-			if (theWord.length === len) {
-				return theWord;
-			}
-		}
-	}//Note: could be self invoking, with callback later
-
-	//a variable set to user input which is then used as argument an argument in theWord function which invokes the above getWord function. note: it is best practice to define all variables at the top of the scope within which it will be operating
-	var theWord = prompt("Please enter your word, or just hit return for a random word");
-	if (!theWord) {
-		theWord = getWord(5);//theWord is set to 5 characters long, note:this could be randomised.
-	}
-	
-	//modify the global String object with a method to be able to replace a character at an index position. Kind of like a splice method. Note: NEEDS COLLISION PROTECTION from other libraries!
-	if(!String.prototype.replaceAt) {
-		String.prototype.replaceAt = function(index, character) {
-			return this.substr(0, index) + character + this.substr(index+character.length);
-		} 
-	}
-	
-	//a long function which processes the user input and compares it to theWord
-	function processLettre(lettre) {
-		var found = false; //this variable is reset everytime it is invoked by a click event
-		
-		//loops through remainingLettres (defined in setup as string of theWord)
-		for (var i = 0 ; i < remainingLettres.length ; i++) {
-			if (remainingLettres.charAt(i) === lettre) { //if we find the letter then...
-				remainingLettres = remainingLettres.replaceAt(i, '_'); //replace the lettre in theWord at index i with '_'
-				secret = secret.replaceAt(i, lettre); //replace the lettre in secret at index i with the lettre.
-				found = true; 
-			}
-		}
-		
-		if (found) {
-			$('#secret').text(secret);
-			if (secret.indexOf('_') === -1) { //if there are no more '_' in secret then user has won
-				alert('You won!');
-				location.reload(); //note: there could be a delay here
-			}
-		} else { //else increment the hangman image
-			currentImage++;
-			var imageId = '#hangman_' + currentImage;
-			$(imageId).fadeTo(300, 1.0, function() {
-				if (currentImage === 7) { //if full hangman then the user has lost. note: this could also be completed with a var to count the number of '_' in secret
-					$('#secret').text(word);
-					alert('You lost!');
-					location.reload();
-				}
-			});
-		}
-	}
-	
-	//Next we need to capture which letter is being clicked/tapped
-	//jquery selector for the lettres class, attaching an event to each of the nodes
-	$('.lettres span').click(function(event) {
-		var lettre = event.target.innerText; //capture the letter clicked in a var
-		$(event.target).addClass('disabled'); //disable the letter just clicked
-		$(event.target).unbind('click'); //once event captured unbind the click event
-		processLettre(this.innerText); //invoke processLettre above
-	});
-	
-	setup(theWord); //initialises the function by invoking setup.
-
-}); //note: this whole function could be self invoking instead of the instantiation type invocation
-</script>
 </body>
 </html>
