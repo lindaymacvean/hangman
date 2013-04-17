@@ -1,4 +1,4 @@
-$(document).ready( function() {
+if(!window.Ehangman) { //stop collisions
 	try {
 		window.Ehangman = function() {
 			//4 variables defined at beginning block
@@ -99,4 +99,4 @@ $(document).ready( function() {
 	} catch(e) {
 		alert(e.name+': '+e.message);
 	}
-});
+}
