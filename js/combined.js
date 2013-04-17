@@ -1,5 +1,6 @@
-if (!Object.Hangman) {
+if (!Object.Hangman) { //if statement which 
 	var Hangman = function() {
+	
 		//4 variables defined at beginning block
 		var theWord = prompt("Please enter your word, or just hit return for a random word").toUpperCase(); //chained functions which passes the object
 		var currentImage = 1;
@@ -15,25 +16,27 @@ if (!Object.Hangman) {
 			} 
 		}
 		
-		//an internal method that gets the word from words array defined in words.js note:should have protection from loading error
-		var getWord = function(len) {
-			while (true) {
-				var theWord = words[Math.floor(Math.random() * words.length)];
-				if (theWord.length === len) {
-					return theWord;
+		//an internal method that gets theWord from words array defined in words.js... if the words array is available AND theWord is not already set by prompt
+		if (words && typeof theWord !== 'string') { //note:this is a bit of a cheat because should have a seperate conditional inside this one to test seperately for theWord being set, the error message below could end up being misleading if it is not the words array that is missing.
+			theWord = function(a,i) {
+				for (each in words) { words[each].length > i ? i=words[each].length : i = i; }; //shorthand form of conditional, loop to find the length of longest word.
+				i = Math.floor(Math.random() * i); //set random length no larger than the longest word in words
+				while(true) {
+					a = Math.floor(Math.random() * words.length);
+					if (words[a].length === i) { //if the word length is correct then return the word, else loop
+						return words[a];
+					}
 				}
-			}
-		};
+			}(0,0);
+		} 
+		else { 
+			throw { 
+				name:'You Don\'t have a word', 
+				message:'the Words array is missing' 
+			} 
+		}
 		
-		//get the Word if it is not already available
-		if (typeof theWord !== 'string') {
-			theWord = function() {
-				var i = 0;
-				for (each in words) { each.length > i ? i+=1 : i = i ; }; //shorthand form of conditional
-				i = Math.floor(Math.random() * i);
-				theWord = getWord(i);//theWord length is randomly set
-			}();
-		}; 
+		
 		
 		//Next we need to capture which letter is being clicked/tapped
 		//jquery selector for the lettres class, attaching an event to each of the nodes
@@ -84,10 +87,10 @@ if (!Object.Hangman) {
 				}
 			}
 			
-			setup(theWord); //initialises the function by invoking setup.
+			//setup(theWord); //initialises the function by invoking setup.
 		};
 	
 	};
 	
-	$(document).ready(hangman()); //note: this whole function could be self invoking instead of the instantiation type invocation
+	//$(document).ready(hangman()); //note: this whole function could be self invoking instead of the instantiation type invocation
 }
